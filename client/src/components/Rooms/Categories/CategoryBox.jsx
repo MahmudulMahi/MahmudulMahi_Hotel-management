@@ -1,11 +1,23 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import qs from 'query-string'
 
 const CategoryBox = ({ label, icon: Icon }) => {
   const [params, setParams] =useSearchParams()
   const navigate=useNavigate()
   const handleClick=()=>{
-    console.log(label)
+    let currentQuery={}
+    if(params){
+      currentQuery=qs.parse(params.toString)
+
+      const updateQuery={...currentQuery,category:label}
+
+      const url=qs.stringifyUrl({
+        url:'/',
+        query:updateQuery
+      })
+      navigate(url)
+    }
   }
   params.get("category")
   return (
