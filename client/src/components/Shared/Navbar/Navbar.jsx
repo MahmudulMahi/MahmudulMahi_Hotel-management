@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import Container from '../Container'
 import logoImg from '../../../assets/images/logo.png'
 import MenuDropdown from './MenuDropdown'
+import { categories } from '../../Rooms/Categories/CategoriesData'
 
 const Navbar = () => {
   return (
@@ -22,6 +23,7 @@ const Navbar = () => {
             {/* Dropdown Menu */}
             <MenuDropdown />
           </div>
+         
         </Container>
       </div>
     </div>

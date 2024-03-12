@@ -33,12 +33,12 @@ const Card = ({room}) => {
             
           </div>
         </div>
-        <div className='font-semibold text-lg'>Sidemen, Indonesia</div>
+        <div className='font-semibold text-lg'>{room?.location}</div>
         <div className='font-light text-neutral-500'>
           5 nights . June 19 - 26
         </div>
         <div className='flex flex-row items-center gap-1'>
-          <div className='font-semibold'>$ 200</div>
+          <div className='font-semibold'>$ {room?.price}</div>
           <div className='font-light'>night</div>
         </div>
       </div>
