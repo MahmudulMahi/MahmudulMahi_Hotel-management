@@ -29,7 +29,7 @@ const Rooms = () => {
 
   }, [category])
 
-  
+  if(loading) return <Loader></Loader>
   return (
     <Container>
       {
