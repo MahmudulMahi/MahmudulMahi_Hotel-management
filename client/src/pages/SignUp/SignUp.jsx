@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
+import axios from 'axios'
 
 const SignUp = () => {
 
@@ -14,8 +15,17 @@ const SignUp = () => {
     const image =form.image.files[0]
     const formData =new FormData()
     formData.append('image',image)
-    console.log({name,email,password})
-    console.log(image)
+    console.log(formData)
+  try{
+    const {data}=await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_API_KET}`,formData
+    )
+  }catch(err){
+    console.log(err)
+  }
+    // console.log(data)
+    // console.log({name,email,password})
+    // console.log(image)
 
 
   }
