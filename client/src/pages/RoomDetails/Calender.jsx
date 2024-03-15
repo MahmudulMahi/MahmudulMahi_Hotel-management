@@ -2,11 +2,11 @@
 import { DateRange } from 'react-date-range'
 
 // eslint-disable-next-line react/prop-types
-const Calender = ({ }) => {
+const Calender = () => {
   return (
     <DateRange
       rangeColors={['#F43F5E']}
-  
+      
       
   
      
