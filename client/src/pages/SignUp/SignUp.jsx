@@ -1,4 +1,36 @@
+import { Link } from 'react-router-dom'
+import { FcGoogle } from 'react-icons/fc'
+import axios from 'axios'
+import { imageUpload } from '../../api/utils'
+import useAuth from "../../hooks/useAuth"
 
+
+const SignUp = () => {
+
+  // useAuth ekti hook
+
+  const {createUser,updateUserProfile,signInWithGoogle}=useAuth()
+
+  const handleSubmit = async event =>{
+    event.preventDefault()
+
+    const form=event.target
+    console.log(event)
+    const name =form.name.value
+    const email=form.email.value
+    const password=form.password.value
+    const image =form.image.files[0]
+    
+
+    try{
+      const imageData=await imageUpload(image)
+      const result =await createUser(email,password)
+
+      await updateUserProfile(name,imageData?.data?.display_url)
+    }
+    catch (err){
+      console.log(err)
+    }
 
     // console.log(imageData)
     // console.log(data)
