@@ -27,9 +27,10 @@ const SignUp = () => {
       const result =await createUser(email,password)
 
       await updateUserProfile(name,imageData?.data?.display_url)
+      console.log(result)
     }
     catch (err){
-      console.log(err)
+      console.log(err) 
     }
 
     // console.log(imageData)

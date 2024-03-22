@@ -6,7 +6,7 @@ export const imageUpload =async image =>{
     console.log(formData)
 
     const {data}=await axios.post(
-      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_API_KET}`,formData
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_API_KEY}`,formData
     )
   return data
 }
