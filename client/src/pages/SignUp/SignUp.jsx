@@ -1,51 +1,76 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import axios from 'axios'
 import { imageUpload } from '../../api/utils'
 import useAuth from "../../hooks/useAuth"
-import { saveUser } from '../../api/auth'
+import { getToken, saveUser } from '../../api/auth'
+import { toast } from 'react-hot-toast'
+import { TbFidgetSpinner } from 'react-icons/tb'
 
 
 const SignUp = () => {
 
+  const navigate = useNavigate()
+
   // useAuth ekti hook
 
-  const {createUser,updateUserProfile,signInWithGoogle}=useAuth()
+  const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth()
 
-  const handleSubmit = async event =>{
+  const handleSubmit = async event => {
     event.preventDefault()
 
-    const form=event.target
+    const form = event.target
     console.log(event)
-    const name =form.name.value
-    const email=form.email.value
-    const password=form.password.value
-    const image =form.image.files[0]
+    const name = form.name.value
+    const email = form.email.value
+    const password = form.password.value
+    const image = form.image.files[0]
 
     // console.log(image)
-    
 
-    try{
-      const imageData=await imageUpload(image)
+
+    try {
+      const imageData = await imageUpload(image)
       // console.log(imageData)
-      const result =await createUser(email,password)
+      const result = await createUser(email, password)
 
-      await updateUserProfile(name,imageData?.data?.display_url)
+      await updateUserProfile(name, imageData?.data?.display_url)
       console.log(result)
-
-      const dbResponse =await saveUser(result?.user)
+      // save user in database
+      const dbResponse = await saveUser(result?.user)
       console.log(dbResponse)
+
+      // get token
+      await getToken(result?.user?.email)
+      navigate('/')
+      toast.success("signUp Successful")
+
     }
-    catch (err){
-      console.log(err) 
+    catch (err) {
+      console.log(err)
+      toast.error(err?.message)
     }
 
-    // console.log(imageData)
-    // console.log(data)
-    // console.log({name,email,password})
-    // console.log(image)
+  }
+  const handleGoogleSignIn = async () => {
+    try {
 
+      const result = await signInWithGoogle()
 
+      // save user in database
+      const dbResponse = await saveUser(result?.user)
+      console.log(dbResponse)
+
+      // get token
+      await getToken(result?.user?.email)
+      navigate('/')
+      toast.success("signUp Successful")
+
+    }
+    catch (err) {
+      console.log(err)
+      toast.error(err?.message)
+    }
   }
   return (
     <div className='flex justify-center items-center min-h-screen'>
@@ -55,7 +80,7 @@ const SignUp = () => {
           <p className='text-sm text-gray-400'>Welcome to StayVista</p>
         </div>
         <form
-        onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -123,7 +148,8 @@ const SignUp = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              Continue
+
+              {loading ? <TbFidgetSpinner className='animate-spin m-auto'></TbFidgetSpinner> : " Continue"}
             </button>
           </div>
         </form>
@@ -134,7 +160,7 @@ const SignUp = () => {
           </p>
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
-        <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+        <div onClick={handleGoogleSignIn} className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
           <FcGoogle size={32} />
 
           <p>Continue with Google</p>
