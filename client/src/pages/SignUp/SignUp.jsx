@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import axios from 'axios'
 import { imageUpload } from '../../api/utils'
 import useAuth from "../../hooks/useAuth"
+import { saveUser } from '../../api/auth'
 
 
 const SignUp = () => {
@@ -20,14 +21,20 @@ const SignUp = () => {
     const email=form.email.value
     const password=form.password.value
     const image =form.image.files[0]
+
+    // console.log(image)
     
 
     try{
       const imageData=await imageUpload(image)
+      // console.log(imageData)
       const result =await createUser(email,password)
 
       await updateUserProfile(name,imageData?.data?.display_url)
       console.log(result)
+
+      const dbResponse =await saveUser(result?.user)
+      console.log(dbResponse)
     }
     catch (err){
       console.log(err) 

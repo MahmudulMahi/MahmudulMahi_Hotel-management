@@ -8,6 +8,9 @@ const jwt = require('jsonwebtoken')
 const morgan = require('morgan')
 const port = process.env.PORT || 8000
 
+
+
+
 // middleware
 const corsOptions = {
   origin: ['http://localhost:5173', 'http://localhost:5174'],
@@ -41,8 +44,26 @@ const client = new MongoClient(process.env.DB_URI, {
     deprecationErrors: true,
   },
 })
+// const client = new MongoClient('mongodb+srv://Hotel_management:8xAj3SgnI7KxhLOf@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+//   serverApi: {
+//     version: ServerApiVersion.v1,
+//     strict: true,
+//     deprecationErrors: true,
+//   },
+// })
+const uri = "mongodb+srv://Hotel_management:8xAj3SgnI7KxhLOf@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// const client = new MongoClient(uri, {
+//   serverApi: {
+//     version: ServerApiVersion.v1,
+//     strict: true,
+//     deprecationErrors: true,
+//   }
+// });
 async function run() {
   try {
+
+    const usersCollection=client.db('hotelManagement').collection('users')
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
