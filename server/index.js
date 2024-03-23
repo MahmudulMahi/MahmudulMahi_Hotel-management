@@ -97,7 +97,23 @@ async function run() {
     })
 
     // Save or modify user email, status in DB
-
+    app.put('/users/:email', async (req, res) => {
+      const email = req.params.email
+      const user = req.body
+      const query = { email: email }
+      const options = { upsert: true }
+      const isExist = await usersCollection.findOne(query)
+      console.log('User found?----->', isExist)
+      if (isExist) return res.send(isExist)
+      const result = await usersCollection.updateOne(
+        query,
+        {
+          $set: { ...user, timestamp: Date.now() },
+        },
+        options
+      )
+      res.send(result)
+    })
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })
