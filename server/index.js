@@ -51,7 +51,7 @@ const client = new MongoClient(process.env.DB_URI, {
 //     deprecationErrors: true,
 //   },
 // })
-const uri = "mongodb+srv://Hotel_management:8xAj3SgnI7KxhLOf@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// const uri = "mongodb+srv://Hotel_management:8xAj3SgnI7KxhLOf@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 // const client = new MongoClient(uri, {
 //   serverApi: {
