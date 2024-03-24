@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
 import { getToken, saveUser } from '../../api/auth'
@@ -7,12 +7,14 @@ import { TbFidgetSpinner } from 'react-icons/tb'
 
 const Login = () => {
 
-  
-  const navigate = useNavigate()
 
+  const navigate = useNavigate()
+  const location = useLocation()
+  console.log()
+  const from = location?.state?.from?.pathname || '/'
   // useAuth ekti hook
 
-  const { signIn, updateUserProfile, signInWithGoogle, loading } = useAuth()
+  const { signIn, signInWithGoogle, loading } = useAuth()
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -28,7 +30,7 @@ const Login = () => {
       const result = await signIn(email, password)
       // get token
       await getToken(result?.user?.email)
-      navigate('/')
+      navigate(from ,{replace: true})
       toast.success("signUp Successful")
 
     }
@@ -49,7 +51,7 @@ const Login = () => {
 
       // get token
       await getToken(result?.user?.email)
-      navigate('/')
+      navigate(from ,{replace: true})
       toast.success("LogIn Successful")
 
     }
@@ -68,7 +70,7 @@ const Login = () => {
           </p>
         </div>
         <form
-        onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -111,7 +113,7 @@ const Login = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-                {loading ? <TbFidgetSpinner className='animate-spin m-auto'></TbFidgetSpinner> : " Continue"}
+              {loading ? <TbFidgetSpinner className='animate-spin m-auto'></TbFidgetSpinner> : " Continue"}
             </button>
           </div>
         </form>
