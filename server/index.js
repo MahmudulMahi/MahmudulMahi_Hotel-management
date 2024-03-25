@@ -3,10 +3,10 @@ const app = express()
 require('dotenv').config()
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
-const { MongoClient, ServerApiVersion } = require('mongodb')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const morgan = require('morgan')
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 9000
 
 
 
@@ -44,26 +44,12 @@ const client = new MongoClient(process.env.DB_URI, {
     deprecationErrors: true,
   },
 })
-// const client = new MongoClient('mongodb+srv://Hotel_management:8xAj3SgnI7KxhLOf@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   },
-// })
-// const uri = "mongodb+srv://Hotel_management:8xAj3SgnI7KxhLOf@cluster0.8zyyzcn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   }
-// });
+
 async function run() {
   try {
 
-    const usersCollection=client.db('hotelManagement').collection('users')
+    const usersCollection = client.db('hotelManagement').collection('users')
+    const roomsCollection = client.db('hotelManagement').collection('rooms')
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -112,6 +98,18 @@ async function run() {
         },
         options
       )
+      res.send(result)
+    })
+
+    // get all rooms
+    app.get('/rooms', async (req, res) => {
+      const result = await roomsCollection.find().toArray()
+      res.send(result)
+    })
+    // get one rooms
+    app.get('/room/:id', async (req, res) => {
+      const id=req.params.id
+      const result = await roomsCollection.findOne({_id:new ObjectId(id)})
       res.send(result)
     })
 
