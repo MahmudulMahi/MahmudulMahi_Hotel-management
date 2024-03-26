@@ -1,6 +1,7 @@
 import React from 'react'
 import { DateRange } from 'react-date-range'
 import { TbFidgetSpinner } from 'react-icons/tb'
+import { categories } from '../Rooms/Categories/CategoriesData'
 
 const AddRoomForm = ({
   handleSubmit,
@@ -38,11 +39,11 @@ const AddRoomForm = ({
                 className='w-full px-4 py-3 border-rose-300 focus:outline-rose-500 rounded-md'
                 name='category'
               >
-                {/* {categories.map(category => (
+                {categories.map(category => (
                   <option value={category.label} key={category.label}>
                     {category.label}
                   </option>
-                ))} */}
+                ))}
               </select>
             </div>
 
@@ -79,6 +80,7 @@ const AddRoomForm = ({
                 <div className='flex flex-col w-max mx-auto text-center'>
                   <label>
                     <input
+                    onChange={e=>handleImageChange(e.target.files[0])}
                       className='text-sm cursor-pointer w-36 hidden'
                       type='file'
                       name='image'
@@ -87,7 +89,7 @@ const AddRoomForm = ({
                       hidden
                     />
                     <div className='bg-rose-500 text-white border border-gray-300 rounded font-semibold cursor-pointer p-1 px-3 hover:bg-rose-500'>
-                      Upload Image
+                      {uploadButtonText}
                     </div>
                   </label>
                 </div>
