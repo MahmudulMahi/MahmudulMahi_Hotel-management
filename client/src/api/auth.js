@@ -14,7 +14,7 @@ export const saveUser = async user => {
 
 export const getToken = async email => {
   const { data } = await axiosSecure.post(`/jwt`, email)
-  console.log("token",data)
+  console.log("token", data)
   return data
 }
 
@@ -22,6 +22,12 @@ export const getToken = async email => {
 
 export const clearCookie = async () => {
   const { data } = await axiosSecure.get(`/logout`)
-  
+
+  return data
+}
+
+// get user role
+export const getRole = async (email) =>{
+  const { data } = await axiosSecure(`/user/${email}`)
   return data
 }
