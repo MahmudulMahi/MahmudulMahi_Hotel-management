@@ -106,10 +106,24 @@ async function run() {
       const result = await roomsCollection.find().toArray()
       res.send(result)
     })
+    // get room for host
+    app.get('/rooms/:email',async (req,res) =>{
+      const email=req.params.email
+      const result=await roomsCollection.find({'host.email':email}).toArray()
+      res.send(result)
+    })
     // get one rooms
     app.get('/room/:id', async (req, res) => {
       const id=req.params.id
       const result = await roomsCollection.findOne({_id:new ObjectId(id)})
+      res.send(result)
+    })
+
+    // save room in database
+
+    app.post('/rooms',verifyToken,async(req,res)=>{
+      const room=req.body
+      const result = await roomsCollection.insertOne(room)
       res.send(result)
     })
 
