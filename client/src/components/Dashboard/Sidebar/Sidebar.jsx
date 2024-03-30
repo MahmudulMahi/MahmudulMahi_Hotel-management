@@ -10,14 +10,20 @@ import { AiOutlineBars } from 'react-icons/ai'
 import { BsGraphUp } from 'react-icons/bs'
 import Logo from '../../Shared/Logo'
 import MenuItem from './MenuItem'
-import { BsFillHouseAddFill } from "react-icons/bs";
-import { FaListOl } from "react-icons/fa";
+
 import useAuth from '../../../hooks/useAuth'
+import useRole from '../../../hooks/useRole'
+import HostMenu from '../TableRows/HostMenu'
+import GuestMenu from '../TableRows/GuestMenu'
+import AdminMenu from '../TableRows/AdminMenu'
 
 const Sidebar = () => {
   const {logOut} =useAuth()
   const [toggle, setToggle] = useState(false)
+  console.log(toggle)
   const [isActive, setActive] = useState(false)
+  const [role]=useRole()
+  console.log('dd',role)
 
   //   For guest/host menu item toggle button
   const toggleHandler = event => {
@@ -60,23 +66,21 @@ const Sidebar = () => {
           {/* Nav Items */}
           <div className='flex flex-col justify-between flex-1 mt-6'>
             {/* If a user is host */}
-            <ToggleBtn toggleHandler={toggleHandler} />
+            {role ==="host" && <ToggleBtn toggleHandler={toggleHandler} />}
             <nav>
               <MenuItem
                 icon={BsGraphUp}
                 label='Statistics'
                 address='dashboard'
               />
-              <MenuItem
-                icon={BsFillHouseAddFill}
-                label='Add Room'
-                address='add-room'
-              />
-              <MenuItem
-                icon={FaListOl}
-                label='My Listing'
-                address='my-listings'
-              />
+
+              {/* host menu item */}
+              {role === 'host' ? toggle ? <HostMenu></HostMenu> : <GuestMenu></GuestMenu> :""  }
+              {/* admin menu item */}
+              {role === 'admin' && <AdminMenu></AdminMenu> }
+              {/* guest menu item */}
+              {role === 'guest' && <GuestMenu></GuestMenu> }
+            
 
               {/* Menu Items */}
             </nav>
