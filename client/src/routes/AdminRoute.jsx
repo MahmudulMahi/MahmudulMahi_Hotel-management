@@ -7,6 +7,7 @@ import useRole from '../hooks/useRole';
 const AdminRoute = ({ children }) => {
 
   const [role, isLoading] = useRole()
+  console.log("ll",role)
   if (isLoading) return <Loader></Loader>
 
   if (role === "admin") return children

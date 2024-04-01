@@ -7,28 +7,6 @@ import { formatDistance } from 'date-fns';
 
 const RoomReservation = ({room}) => {
 
-  // const [totalPrice, setTotalPrice] = useState(0);
-
-  // useEffect(() => {
-  //   const calculateTotalPrice = () => {
-  //     if (!room || !room.from || !room.to || !room.price) return;
-      
-  //     const fromDate = new Date(room.from);
-  //     const toDate = new Date(room.to);
-
-  //     if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
-  //       console.error('Invalid date format');
-  //       return;
-  //     }
-
-  //     const totalDays = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)); // Calculate total days
-  //     const totalPrice = totalDays * room.price; // Calculate total price
-  //     setTotalPrice(totalPrice);
-  //   };
-
-  //   calculateTotalPrice();
-  // }, [room]);
-
   const [value,setValue]=useState({
     startDate:new Date(room?.from),
     endDate:new Date(room?.to),
@@ -37,8 +15,20 @@ const RoomReservation = ({room}) => {
   const totalDays = parseInt(
     formatDistance(new Date(room?.to) , new Date(room?.from)).split(' ')[0]
   )
-  const totalPrice=totalDays * room?.price
+  const totalPrice= totalDays * room?.price
   console.log(totalPrice)
+
+    // Total Price Calculation
+    
+    const handleDateChange = ranges => {
+      console.log(ranges)
+      setValue({
+        startDate: new Date(room?.from),
+        endDate: new Date(room?.to),
+        key: 'selection',
+      })
+    }
+
   return (
     <div className='rounded-xl border-[1px] border-neutral-200 overflow-hidden bg-white  '>
       <div className='flex items-center gap-1 p-4'>
@@ -51,7 +41,7 @@ const RoomReservation = ({room}) => {
       </div>
       <hr />
       <div className='flex justify-center'>
-      <Calender value={value} ></Calender>
+      <Calender handleDateChange={handleDateChange} value={value} ></Calender>
       </div>
       <hr />
       <div className='p-4'>
@@ -63,7 +53,7 @@ const RoomReservation = ({room}) => {
       Total
       </div>
       <div>
-      $ {room?.price}
+      $ {totalPrice}
       </div>
       </div>
     </div>
