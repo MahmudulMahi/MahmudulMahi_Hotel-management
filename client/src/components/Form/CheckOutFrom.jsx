@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import './CheckoutForm.css'
 import useAuth from '../../hooks/useAuth'
 import { ImSpinner9 } from 'react-icons/im'
+import { createPaymentIntent } from '../../api/bookings'
+
 
 const CheckOutFrom = ({ bookingInfo, closeModal }) => {
   const stripe = useStripe()
@@ -15,9 +17,26 @@ const CheckOutFrom = ({ bookingInfo, closeModal }) => {
 
   // Create Payment Intent
 
-  useEffect(()=>{
+  // useEffect(()=>{
 
-  },[bookingInfo])
+  //   if(bookingInfo.price > 0){
+  //     createPaymentIntent({price:bookingInfo.price}).then(data=>{
+  //       console.log(data.clientSecret);
+  //       setClientSecret(data.clientSecret)
+  //     })
+    
+  //   }
+
+  // },[bookingInfo])
+  useEffect(() => {
+    // create payment intent
+    if (bookingInfo.price > 0) {
+      createPaymentIntent({ price: bookingInfo.price }).then(data => {
+        console.log("hhhh",data.clientSecret)
+        setClientSecret(data.clientSecret)
+      })
+    }
+  }, [bookingInfo])
 
   const handleSubmit = async event => {
     event.preventDefault()

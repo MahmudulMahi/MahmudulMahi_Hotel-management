@@ -149,16 +149,32 @@ async function run() {
       const {client_secret}=await stripe.paymentintents.create({
         amount:amount,
         currency:'usd',
-        payment_method_types:['card']
+        payment_method_types:['card'],
       })
-      res.send({clientSecret: client_secret})
+      res.send({clientSecret:client_secret})
+      console.log("lll",client_secret);
     })
 
     // save booking
 
-    app.post('/bookings',async(req,res)=>{
+    app.post('/bookings',verifyToken,async(req,res)=>{
       const booking=req.body
       const result=await bookingsCollection.insertOne(booking)
+      res.send(result)
+    })
+
+    // update booking status
+    app.patch('/rooms/status/:id',async(req,res)=>{
+      const id=req.params.id
+      const status=req.body.status
+      const query={_id:new ObjectId(id)}
+      const updateDoc={
+        $set:{
+          booked:status
+        },
+        
+      }
+      const result= await roomsCollection.updateOne(query,updateDoc)
       res.send(result)
     })
 
