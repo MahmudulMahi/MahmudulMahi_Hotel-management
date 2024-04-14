@@ -154,6 +154,14 @@ async function run() {
       res.send({clientSecret: client_secret})
     })
 
+    // save booking
+
+    app.post('/bookings',async(req,res)=>{
+      const booking=req.body
+      const result=await bookingsCollection.insertOne(booking)
+      res.send(result)
+    })
+
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })
     console.log(
