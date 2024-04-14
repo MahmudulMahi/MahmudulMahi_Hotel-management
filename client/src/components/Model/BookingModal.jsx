@@ -5,7 +5,7 @@ import { Fragment } from 'react'
 
 import { loadStripe } from '@stripe/stripe-js'
 import CheckOutFrom from '../Form/CheckOutFrom'
-const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK)
+const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_GATEWAY_PK)
 const BookingModal = ({ closeModal, isOpen, bookingInfo }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>

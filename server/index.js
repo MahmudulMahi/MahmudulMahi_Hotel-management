@@ -7,7 +7,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const morgan = require('morgan')
 const port = process.env.PORT || 9000
-
+const stripe=require('stripe')(process.env.PAYMENT_SECRET_KEY)
 
 
 
@@ -50,6 +50,7 @@ async function run() {
 
     const usersCollection = client.db('hotelManagement').collection('users')
     const roomsCollection = client.db('hotelManagement').collection('rooms')
+    const bookingsCollection = client.db('hotelManagement').collection('bookings')
     // auth related api
     app.post('/jwt', async (req, res) => {
       const user = req.body
@@ -136,6 +137,21 @@ async function run() {
       const room = req.body
       const result = await roomsCollection.insertOne(room)
       res.send(result)
+    })
+
+    // payment method
+    app.post('/create-payment-intent',verifyToken,async (req, res)=>{
+      const {price}=req.body
+      const amount=parseFloat(price*100)
+      if(!price || amount > 1){
+        return
+      }
+      const {client_secret}=await stripe.paymentintents.create({
+        amount:amount,
+        currency:'usd',
+        payment_method_types:['card']
+      })
+      res.send({clientSecret: client_secret})
     })
 
     // Send a ping to confirm a successful connection
