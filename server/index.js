@@ -140,7 +140,20 @@ async function run() {
     })
 
     // payment method
-
+    app.post('/create-payment-intent',verifyToken,async (req, res)=>{
+      const {price}=req.body
+      const amount=parseFloat(price*100)
+      if(!price || amount > 1){
+        return
+      }
+      const {client_secret}=await stripe.paymentintents.create({
+        amount:amount,
+        currency:'usd',
+        payment_method_types:['card'],
+      })
+      res.send({clientSecret:client_secret})
+      console.log("lll",client_secret);
+    })
 
     // save booking
 
