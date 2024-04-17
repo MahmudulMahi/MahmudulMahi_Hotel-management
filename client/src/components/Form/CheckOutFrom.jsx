@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react'
 import './CheckoutForm.css'
 import useAuth from '../../hooks/useAuth'
 import { ImSpinner9 } from 'react-icons/im'
-import { createPaymentIntent, saveBookingInfo } from '../../api/bookings'
+import { createPaymentIntent, saveBookingInfo, updateStatus } from '../../api/bookings'
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 
 const CheckOutFrom = ({ bookingInfo, closeModal }) => {
@@ -15,6 +16,8 @@ const CheckOutFrom = ({ bookingInfo, closeModal }) => {
   const [cardError, setCardError] = useState('')
   const [clientSecret, setClientSecret] = useState('')
   const [processing, setProcessing] = useState(false)
+
+  const navigate = useNavigate();
 
   // Create Payment Intent
 
@@ -92,11 +95,22 @@ const CheckOutFrom = ({ bookingInfo, closeModal }) => {
         transactionId: paymentIntent.id,
         date: new Date(),
       }
+
+      // save payment information in bd
       try{
         await saveBookingInfo(paymentInfo)
+
+        // update room status
+
+        await updateStatus(bookingInfo.roomId,true)
+        const text=`Booking successfull ${paymentIntent.id}`
+        toast.success(text)
+        navigate('/dashboard/my-bookings')
       }catch (err){
         console.log(err);
         toast.error(err.message)
+      }finally{
+        setProcessing(false)
       }
 
       setProcessing(false)
