@@ -7,7 +7,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const morgan = require('morgan')
 const port = process.env.PORT || 9000
-const stripe=require('stripe')(process.env.PAYMENT_SECRET_KEY)
+const stripe = require('stripe')(process.env.PAYMENT_SECRET_KEY)
 
 
 
@@ -107,7 +107,7 @@ async function run() {
     app.get('/user/:email', async (req, res) => {
 
       const email = req.params.email
-      
+
       const result = await usersCollection.findOne({ email })
       res.send(result)
 
@@ -120,7 +120,7 @@ async function run() {
     })
     // get room for host
     app.get('/rooms/:email', async (req, res) => {
-      const email = req.params.email 
+      const email = req.params.email
       const result = await roomsCollection.find({ 'host.email': email }).toArray()
       res.send(result)
     })
@@ -140,41 +140,40 @@ async function run() {
     })
 
     // payment method
-    app.post('/create-payment-intent',verifyToken,async (req, res)=>{
-      const {price}=req.body
-      const amount=parseFloat(price*100)
-      if(!price || amount > 1){
-        return
-      }
-      const {client_secret}=await stripe.paymentintents.create({
-        amount:amount,
-        currency:'usd',
-        payment_method_types:['card'],
+    app.post('/create-payment-intent', verifyToken, async (req, res) => {
+      const { price } = req.body
+      const amount = parseInt(price * 100)
+      if (!price || amount < 1) return
+
+      const { client_secret } = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: 'usd',
+        payment_method_types: ['card'],
       })
-      res.send({clientSecret:client_secret})
-      console.log("lll",client_secret);
+      res.send({ clientSecret: client_secret })
+     
     })
 
     // save booking
 
-    app.post('/bookings',verifyToken,async(req,res)=>{
-      const booking=req.body
-      const result=await bookingsCollection.insertOne(booking)
+    app.post('/bookings', verifyToken, async (req, res) => {
+      const booking = req.body
+      const result = await bookingsCollection.insertOne(booking)
       res.send(result)
     })
 
     // update booking status
-    app.patch('/rooms/status/:id',async(req,res)=>{
-      const id=req.params.id
-      const status=req.body.status
-      const query={_id:new ObjectId(id)}
-      const updateDoc={
-        $set:{
-          booked:status
+    app.patch('/rooms/status/:id', async (req, res) => {
+      const id = req.params.id
+      const status = req.body.status
+      const query = { _id: new ObjectId(id) }
+      const updateDoc = {
+        $set: {
+          booked: status
         },
-        
+
       }
-      const result= await roomsCollection.updateOne(query,updateDoc)
+      const result = await roomsCollection.updateOne(query, updateDoc)
       res.send(result)
     })
 

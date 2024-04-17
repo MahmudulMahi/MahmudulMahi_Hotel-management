@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import './CheckoutForm.css'
 import useAuth from '../../hooks/useAuth'
 import { ImSpinner9 } from 'react-icons/im'
-import { createPaymentIntent } from '../../api/bookings'
+import { createPaymentIntent, saveBookingInfo } from '../../api/bookings'
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const CheckOutFrom = ({ bookingInfo, closeModal }) => {
@@ -32,7 +33,7 @@ const CheckOutFrom = ({ bookingInfo, closeModal }) => {
     // create payment intent
     if (bookingInfo.price > 0) {
       createPaymentIntent({ price: bookingInfo.price }).then(data => {
-        console.log("hhhh",data.clientSecret)
+        console.log("hhhh",data)
         setClientSecret(data.clientSecret)
       })
     }
@@ -90,6 +91,12 @@ const CheckOutFrom = ({ bookingInfo, closeModal }) => {
         ...bookingInfo,
         transactionId: paymentIntent.id,
         date: new Date(),
+      }
+      try{
+        await saveBookingInfo(paymentInfo)
+      }catch (err){
+        console.log(err);
+        toast.error(err.message)
       }
 
       setProcessing(false)
