@@ -19,19 +19,6 @@ const CheckOutFrom = ({ bookingInfo, closeModal }) => {
 
   const navigate = useNavigate();
 
-  // Create Payment Intent
-
-  // useEffect(()=>{
-
-  //   if(bookingInfo.price > 0){
-  //     createPaymentIntent({price:bookingInfo.price}).then(data=>{
-  //       console.log(data.clientSecret);
-  //       setClientSecret(data.clientSecret)
-  //     })
-    
-  //   }
-
-  // },[bookingInfo])
   useEffect(() => {
     // create payment intent
     if (bookingInfo.price > 0) {
