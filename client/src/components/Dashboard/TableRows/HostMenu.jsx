@@ -2,6 +2,7 @@ import React from 'react';
 import MenuItem from '../Sidebar/MenuItem';
 import { BsFillHouseAddFill } from 'react-icons/bs';
 import { FaListOl } from 'react-icons/fa';
+import {  MdOutlineManageHistory } from 'react-icons/md'
 
 const HostMenu = () => {
   return (
@@ -15,6 +16,11 @@ const HostMenu = () => {
         icon={FaListOl}
         label='My Listing'
         address='my-listings'
+      />
+         <MenuItem
+        icon={MdOutlineManageHistory}
+        label='Manage Bookings'
+        address='manage-bookings'
       />
     </>
   );
