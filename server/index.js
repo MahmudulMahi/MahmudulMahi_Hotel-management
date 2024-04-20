@@ -177,6 +177,23 @@ async function run() {
       res.send(result)
     })
 
+    // get all booking for guest
+    app.get('/bookings',verifyToken,async (req,res) =>{
+      const email=req.query.email
+      if(!email) return res.send([])
+      const query={'guest.email':email}
+      const result =await bookingsCollection.find(query).toArray()
+      res.send(result)
+    })
+    // get all booking for host
+    app.get('/bookings/host',verifyToken,async (req,res) =>{
+      const email=req.query.email
+      if(!email) return res.send([])
+      const query={host:email}
+      const result =await bookingsCollection.find(query).toArray()
+      res.send(result)
+    })
+
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })
     console.log(
