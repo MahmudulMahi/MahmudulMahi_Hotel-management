@@ -4,6 +4,10 @@ import { Helmet } from 'react-helmet-async'
 import useAuth from '../../../hooks/useAuth'
 import { useQuery } from '@tanstack/react-query'
 import { getBookings } from '../../../api/bookings'
+import Loader from '../../../components/Shared/Loader'
+import TableRow from '../../../components/Dashboard/TableRows/TableRow'
+
+
 const MyBookings = () => {
   const {user,loading}=useAuth()
   const {data:bookings=[],isLoading}=useQuery({
@@ -12,6 +16,8 @@ const MyBookings = () => {
     queryFn:async () => await getBookings(user?.email)
   })
   console.log(bookings);
+
+  if(isLoading) return <Loader></Loader>
   return (
     <>
       <Helmet>
@@ -63,7 +69,9 @@ const MyBookings = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{/* Table Row Data */}</tbody>
+                <tbody>{/* Table Row Data */}
+                {bookings && bookings.map(booking => <TableRow key={booking.id}  booking={booking}></TableRow>)}
+                </tbody>
               </table>
             </div>
           </div>
