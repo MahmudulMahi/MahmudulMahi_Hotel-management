@@ -189,7 +189,7 @@ async function run() {
     app.get('/bookings/host',verifyToken,async (req,res) =>{
       const email=req.query.email
       if(!email) return res.send([])
-      const query={host:email}
+      const query={'host':email}
       const result =await bookingsCollection.find(query).toArray()
       res.send(result)
     })

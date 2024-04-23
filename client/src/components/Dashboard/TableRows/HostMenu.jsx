@@ -17,11 +17,7 @@ const HostMenu = () => {
         label='My Listing'
         address='my-listings'
       />
-         <MenuItem
-        icon={MdOutlineManageHistory}
-        label='Manage Bookings'
-        address='manage-bookings'
-      />
+ 
     </>
   );
 };

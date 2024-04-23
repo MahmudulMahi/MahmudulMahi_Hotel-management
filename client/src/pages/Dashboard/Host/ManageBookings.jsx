@@ -1,8 +1,10 @@
 import { Helmet } from 'react-helmet-async'
 import useAuth from '../../../hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
-import { getHostBookings } from '../../../api/bookings';
+
 import Loader from '../../../components/Shared/Loader';
+import TableRow from '../../../components/Dashboard/TableRows/TableRow';
+import { getHostBookings } from '../../../api/bookings';
 
 const ManageBookings = () => {
   const {user,loading}=useAuth()
@@ -65,7 +67,9 @@ const ManageBookings = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{/* Table row data */}</tbody>
+                <tbody>{/* Table row data */}
+                {bookings && bookings.map(booking => <TableRow key={booking.id}  booking={booking}></TableRow>)}
+                </tbody>
               </table>
             </div>
           </div>
