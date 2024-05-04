@@ -18,6 +18,9 @@ const ManageBookings = () => {
   if(isLoading) return <Loader></Loader>
   return (
     <>
+      {/* <Helmet>
+        <title>Manage Bookings</title>
+      </Helmet> */}
       <Helmet>
         <title>Manage Bookings</title>
       </Helmet>
