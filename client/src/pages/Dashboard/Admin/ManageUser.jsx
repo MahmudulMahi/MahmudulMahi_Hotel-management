@@ -1,15 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
 import { getAllUsers } from '../../../api/auth';
 import { Helmet } from 'react-helmet-async';
+import UserData from '../../../components/Dashboard/TableRows/UserData';
+
 
 const ManageUser = () => {
-  const { data: users = [], refetch } = useQuery({
+  const { data: users = [],  } = useQuery({
     queryKey: ['users'],
     queryFn: async () => await getAllUsers(),
   })
 
-  console.log(users)
+  console.log("ttt",users)
   return (
     <>
       <div className='container mx-auto px-4 sm:px-8'>
@@ -52,10 +53,10 @@ const ManageUser = () => {
                 <tbody>
                   {users &&
                     users.map(user => (
-                      <UserDataRow
+                      <UserData
                         key={user._id}
                         user={user}
-                        refetch={refetch}
+                        // refetch={refetch}
                       />
                     ))}
                 </tbody>
