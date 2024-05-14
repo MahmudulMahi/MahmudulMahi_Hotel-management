@@ -5,7 +5,7 @@ import UserData from '../../../components/Dashboard/TableRows/UserData';
 
 
 const ManageUser = () => {
-  const { data: users = [],  } = useQuery({
+  const { data: users = [],refetch  } = useQuery({
     queryKey: ['users'],
     queryFn: async () => await getAllUsers(),
   })
@@ -56,7 +56,7 @@ const ManageUser = () => {
                       <UserData
                         key={user._id}
                         user={user}
-                        // refetch={refetch}
+                        refetch={refetch}
                       />
                     ))}
                 </tbody>

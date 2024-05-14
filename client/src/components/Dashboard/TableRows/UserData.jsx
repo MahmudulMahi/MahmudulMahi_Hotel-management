@@ -2,13 +2,14 @@ import { useState } from 'react'
 
 import { toast } from 'react-hot-toast'
 import UpdateUserModal from '../../Model/UpdateUserModal'
-const UserData = ({ user,  }) => {
+import { updateRole } from '../../../api/auth'
+const UserData = ({ user, refetch }) => {
   const [isOpen, setIsOpen] = useState(false)
   const modalHandler = async role => {
     try {
       const data = await updateRole({ email: user?.email, role })
       console.log(data)
-      // refetch()
+      refetch()
       toast.success('User role updated!')
     } catch (err) {
       console.log(err)
