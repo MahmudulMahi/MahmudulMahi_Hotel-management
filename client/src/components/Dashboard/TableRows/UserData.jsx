@@ -14,9 +14,7 @@ const UserData = ({ user, refetch }) => {
     } catch (err) {
       console.log(err)
       toast.error(err.message)
-    } finally {
-      setIsOpen(false)
-    }
+    } 
   }
   return (
     <tr>
