@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const morgan = require('morgan')
 const port = process.env.PORT || 9000
 const stripe = require('stripe')(process.env.PAYMENT_SECRET_KEY)
+const nodemailer=require('nodemailer')
 
 
 
@@ -39,7 +40,40 @@ const verifyToken = async (req, res, next) => {
 
 // send email
 const sendEmail=()=>{
-  
+// create transport
+const transporter=nodemailer.createTransport({
+  service:'gmail',
+  host:'smtp.gmail.com',
+  port:587,
+  secure:false,
+  auth:{
+    user:process.env.MAIL,
+    Pass:process.env.PASS,
+  },
+
+})
+// verify connection
+transporter.verify((error,success) => {
+  if(error){
+    console.log(error);
+  }else{
+    console.log('server is ready to take emails',success);
+  }
+})
+const mailBody = {
+  from: process.env.MAIL,
+  to: emailAddress,
+  subject: emailData?.subject,
+  html: `<p>${emailData?.message}</p>`,
+}
+
+transporter.sendMail(mailBody, (error, info) => {
+  if (error) {
+    console.log(error)
+  } else {
+    console.log('Email sent: ' + info.response)
+  }
+})
 }
 
 const client = new MongoClient(process.env.DB_URI, {
