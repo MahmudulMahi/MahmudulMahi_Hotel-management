@@ -37,6 +37,11 @@ const verifyToken = async (req, res, next) => {
   })
 }
 
+// send email
+const sendEmail=()=>{
+  
+}
+
 const client = new MongoClient(process.env.DB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
