@@ -17,7 +17,7 @@ const Statistics = () => {
       {role === 'host' && <HostStatistics />}*/}
       {role === 'admin' && <AdminStatistics />}
 
-      <h2>tt</h2>
+      
     </div>
   )
 }
