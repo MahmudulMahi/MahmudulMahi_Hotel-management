@@ -39,42 +39,42 @@ const verifyToken = async (req, res, next) => {
 }
 
 // send email
-// const sendEmail=(emailAddress, emailData)=>{
-// // create transport
-// const transporter=nodemailer.createTransport({
-//   service:'gmail',
-//   host:'smtp.gmail.com',
-//   port:587,
-//   secure:false,
-//   auth:{
-//     user:process.env.MAIL,
-//     Pass:process.env.PASS,
-//   },
+const sendEmail=(emailAddress, emailData)=>{
+// create transport
+const transporter=nodemailer.createTransport({
+  service:'gmail',
+  host:'smtp.gmail.com',
+  port:587,
+  secure:false,
+  auth:{
+    user:'mdmahmudulislam00@gmail.com',
+    Pass:'lahmlkkzpzflrwky',
+  },
 
-// })
-// // verify connection
-// transporter.verify((error,success) => {
-//   if(error){
-//     console.log(error);
-//   }else{
-//     console.log('server is ready to take emails',success);
-//   }
-// })
-// const mailBody = {
-//   from: process.env.MAIL,
-//   to: emailAddress,
-//   subject: emailData?.subject,
-//   html: `<p>${emailData?.message}</p>`,
-// }
+})
+// verify connection
+transporter.verify((error,success) => {
+  if(error){
+    console.log(error);
+  }else{
+    console.log('server is ready to take emails',success);
+  }
+})
+const mailBody = {
+  from: process.env.MAIL,
+  to: emailAddress,
+  subject: emailData?.subject,
+  html: `<p>${emailData?.message}</p>`,
+}
 
-// transporter.sendMail(mailBody, (error, info) => {
-//   if (error) {
-//     console.log(error)
-//   } else {
-//     console.log('Email sent: ' + info.response)
-//   }
-// })
-// }
+transporter.sendMail(mailBody, (error, info) => {
+  if (error) {
+    console.log(error)
+  } else {
+    console.log('Email sent: ' + info.response)
+  }
+})
+}
 
 const client = new MongoClient(process.env.DB_URI, {
   serverApi: {
@@ -233,20 +233,20 @@ async function run() {
     app.post('/bookings', verifyToken, async (req, res) => {
       const booking = req.body
       const result = await bookingsCollection.insertOne(booking)
-      //  // Send Email.....
-      //  if (result.insertedId) {
-      //   // To guest
-      //   sendEmail(booking.guest.email, {
-      //     subject: 'Booking Successful!',
-      //     message: `Room Ready, chole ashen vai, apnar Transaction Id: ${booking.transactionId}`,
-      //   })
+       // Send Email.....
+       if (result.insertedId) {
+        // To guest
+        sendEmail(booking.guest.email, {
+          subject: 'Booking Successful!',
+          message: `Room Ready, chole ashen vai, apnar Transaction Id: ${booking.transactionId}`,
+        })
 
-      //   // To Host
-      //   sendEmail(booking.host, {
-      //     subject: 'Your room got booked!',
-      //     message: `Room theke vago. ${booking.guest.name} ashtese.....`,
-      //   })
-      // }
+        // To Host
+        sendEmail(booking.host, {
+          subject: 'Your room got booked!',
+          message: `Room theke vago. ${booking.guest.name} ashtese.....`,
+        })
+      }
       res.send(result)
     })
 
@@ -306,7 +306,32 @@ async function run() {
 
     })
 
-    // Become a host
+       // Admin Stat Data
+       app.get('/admin-stat', verifyToken, verifyAdmin, async (req, res) => {
+        const bookingsDetails = await bookingsCollection
+          .find({}, { projection: { date: 1, price: 1 } })
+          .toArray()
+        const userCount = await usersCollection.countDocuments()
+        const roomCount = await roomsCollection.countDocuments()
+        const totalSale = bookingsDetails.reduce(
+          (sum, data) => sum + data.price,
+          0
+        )
+  
+        const chartData = bookingsDetails.map(data => {
+          const day = new Date(data.date).getDate()
+          const month = new Date(data.date).getMonth() + 1
+          return [day + '/' + month, data.price]
+        })
+        chartData.unshift(['Day', 'Sale'])
+        res.send({
+          totalSale,
+          bookingCount: bookingsDetails.length,
+          userCount,
+          roomCount,
+          chartData,
+        })
+      })
 
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 })
